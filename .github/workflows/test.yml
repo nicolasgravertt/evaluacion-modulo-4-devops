@@ -63,7 +63,7 @@ jobs:
         run: |
           mkdir -p resultados
           apache-jmeter-5.6.3/bin/jmeter -n \
-            -t pruebas/mi_prueba.jmx \
+            -t PruebasJmeter/TestActualizarPeso.jmx \
             -l resultados/resultados.jtl \
             -e -o resultados/reporte-html
 
