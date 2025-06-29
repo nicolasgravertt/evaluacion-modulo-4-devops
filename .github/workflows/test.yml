@@ -68,7 +68,7 @@ jobs:
             -e -o resultados/reporte-html
 
       - name: Subir reporte de JMeter
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: reporte-jmeter
           path: resultados/reporte-html
