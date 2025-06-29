@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario Usuario</title>
+</head>
+<body>
+<h1>Actualizar Peso</h1>
+<label for="nombre">Nombre:</label>
+<input id="nombre" type="text" value="Juan"><br><br>
+
+<label for="peso">Peso:</label>
+<input id="peso" type="number" value="70"><br><br>
+
+<button id="actualizar">Actualizar</button>
+
+<p id="resultado"></p>
+
+<script>
+    document.getElementById('actualizar').addEventListener('click', function () {
+        const nombre = document.getElementById('nombre').value;
+        const peso = document.getElementById('peso').value;
+        document.getElementById('resultado').textContent =
+            `Usuario: ${nombre}, Peso Actual: ${peso} kg`;
+    });
+</script>
+</body>
+</html>

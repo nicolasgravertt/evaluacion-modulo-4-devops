@@ -1,0 +1,47 @@
+package com.ejemplo;
+
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.io.File;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class UsuarioUITest {
+
+    @Test
+    void testFormularioUsuario() {
+
+        String driverPath = new File("chromedriver.exe").getAbsolutePath();
+        System.setProperty("webdriver.chrome.driver", driverPath);
+
+        WebDriver driver = new ChromeDriver();
+
+        try {
+            File htmlFile = new File("src/test/resources/html/usuario-form.html");
+            String url = "file:///" + htmlFile.getAbsolutePath();
+            driver.get(url);
+
+            WebElement nombreInput = driver.findElement(By.id("nombre"));
+            WebElement pesoInput = driver.findElement(By.id("peso"));
+            WebElement actualizarButton = driver.findElement(By.id("actualizar"));
+
+            nombreInput.clear();
+            nombreInput.sendKeys("Ana");
+            pesoInput.clear();
+            pesoInput.sendKeys("65");
+            actualizarButton.click();
+
+            WebElement resultado = driver.findElement(By.id("resultado"));
+            String texto = resultado.getText();
+
+            assertTrue(texto.contains("Ana"));
+            assertTrue(texto.contains("65"));
+        } finally {
+            driver.quit();
+        }
+    }
+}
