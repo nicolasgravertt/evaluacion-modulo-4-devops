@@ -14,7 +14,6 @@ public class UsuarioController {
 
     @PostMapping
     public Usuario actualizarPeso(@RequestBody Usuario usuario) {
-        // Aquí podrías hacer lógica adicional si quisieras
         return service.actualizarPeso(usuario, usuario.getPeso());
     }
 }
