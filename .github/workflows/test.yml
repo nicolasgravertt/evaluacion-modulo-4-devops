@@ -72,3 +72,10 @@ jobs:
         with:
           name: reporte-jmeter
           path: resultados/reporte-html
+
+      - name: Configurar SonarCloud
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          projectBaseDir: .
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
