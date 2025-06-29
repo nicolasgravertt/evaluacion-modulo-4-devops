@@ -17,11 +17,31 @@
 <p id="resultado"></p>
 
 <script>
-    document.getElementById('actualizar').addEventListener('click', function () {
+    document.getElementById('actualizar').addEventListener('click', async function () {
         const nombre = document.getElementById('nombre').value;
-        const peso = document.getElementById('peso').value;
-        document.getElementById('resultado').textContent =
-            `Usuario: ${nombre}, Peso Actual: ${peso} kg`;
+        const peso = parseFloat(document.getElementById('peso').value);
+
+        try {
+            const response = await fetch('http://localhost:8080/usuario', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ nombre, peso })
+            });
+
+            if (!response.ok) {
+                throw new Error('Error en la solicitud');
+            }
+
+            const data = await response.json();
+            document.getElementById('resultado').textContent =
+                `Usuario: ${data.nombre}, Peso Actual: ${data.peso} kg`;
+
+        } catch (error) {
+            document.getElementById('resultado').textContent = 'Ocurrió un error al actualizar el peso.';
+            console.error(error);
+        }
     });
 </script>
 </body>

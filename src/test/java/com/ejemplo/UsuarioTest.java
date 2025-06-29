@@ -1,14 +1,29 @@
 package com.ejemplo;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-class UsuarioTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@ExtendWith(MockitoExtension.class)
+class UsuarioServiceTest {
+
+    @InjectMocks
+    private UsuarioService usuarioService;
 
     @Test
     void testActualizarPeso() {
-        Usuario usuario = new Usuario("Juan", 70.0);
-        usuario.actualizarPeso(72.5);
-        assertEquals(72.5, usuario.getPeso(), 0.01);
+        // Arrange
+        Usuario usuario = new Usuario("Carlos", 80);
+
+        // Act
+        Usuario actualizado = usuarioService.actualizarPeso(usuario, 85);
+
+        // Assert
+        assertEquals(85.0, actualizado.getPeso());
+        assertEquals("Carlos", actualizado.getNombre());
     }
 }
+

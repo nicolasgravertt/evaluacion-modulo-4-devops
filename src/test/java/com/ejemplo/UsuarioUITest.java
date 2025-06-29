@@ -3,17 +3,16 @@ package com.ejemplo;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-// import org.openqa.selenium.WebDriver;
-// import org.openqa.selenium.chrome.ChromeDriver;
-
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import java.time.Duration;
+import org.junit.jupiter.api.Test;
 import java.io.File;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-public class UsuarioUITest {
+public class UsuarioUITest extends BaseSeleniumTest {
 
     @Test
     void testFormularioUsuario() {
@@ -21,7 +20,7 @@ public class UsuarioUITest {
         // Prueba en local con el archivo chromedriver.exe
         // String driverPath = new File("chromedriver.exe").getAbsolutePath();
         // System.setProperty("webdriver.chrome.driver", driverPath);
-
+        // WebDriver driver = new ChromeDriver();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new");         // Headless for CI (Chrome 109+)
         options.addArguments("--no-sandbox");           // Requerido en CI
@@ -44,11 +43,10 @@ public class UsuarioUITest {
             pesoInput.sendKeys("65");
             actualizarButton.click();
 
-            WebElement resultado = driver.findElement(By.id("resultado"));
-            String texto = resultado.getText();
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+            WebElement resultado = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("resultado")));
 
-            assertTrue(texto.contains("Ana"));
-            assertTrue(texto.contains("65"));
+            assertEquals("Usuario: Ana, Peso Actual: 65 kg", resultado.getText());
         } finally {
             driver.quit();
         }
