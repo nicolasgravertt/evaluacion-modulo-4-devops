@@ -1,17 +1,13 @@
 name: Pipelines Evaluacion Modulo 4
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push, pull_request]
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout del código
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Instalar JDK 17
@@ -20,8 +16,23 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Compilar y testear
-        run: mvn clean install
+      - name: Instalar Google Chrome
+        run: |
+          sudo apt update
+          sudo apt install -y wget unzip curl gnupg
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install -y ./google-chrome-stable_current_amd64.deb
 
-      - name: Ejecutar pruebas
+      - name: Instalar ChromeDriver - Selenium
+        run: |
+          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
+          echo "Detected Chrome version: $CHROME_VERSION"
+          CHROMEDRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json" \
+            | jq -r --arg ver "$CHROME_VERSION" '.channels.Stable.downloads.chromedriver[] | select(.platform == "linux64") | .url')
+          wget -O chromedriver.zip "$CHROMEDRIVER_VERSION"
+          unzip chromedriver.zip
+          chmod +x chromedriver
+          sudo mv chromedriver /usr/local/bin/
+
+      - name: Ejecutar tests
         run: mvn test
