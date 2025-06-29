@@ -34,5 +34,41 @@ jobs:
           chmod +x chromedriver-linux64/chromedriver
           sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
 
+      - name: Compilar aplicación sin tests
+        run: mvn clean package -DskipTests
+
+      - name: Iniciar aplicación Spring Boot
+        run: java -jar target/health-check-application-1.0-SNAPSHOT.jar &
+        shell: bash
+
+      - name: Esperar a que el servidor inicie
+        run: sleep 10
+
       - name: Ejecutar tests
         run: mvn test
+
+      # =====================
+      #     PRUEBAS JMETER
+      # =====================
+
+      - name: Instalar JMeter
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget https://downloads.apache.org/jmeter/binaries/apache-jmeter-5.6.3.zip
+          unzip apache-jmeter-5.6.3.zip
+          echo "$PWD/apache-jmeter-5.6.3/bin" >> $GITHUB_PATH
+
+      - name: Ejecutar pruebas de rendimiento con JMeter
+        run: |
+          mkdir -p resultados
+          apache-jmeter-5.6.3/bin/jmeter -n \
+            -t pruebas/mi_prueba.jmx \
+            -l resultados/resultados.jtl \
+            -e -o resultados/reporte-html
+
+      - name: Subir reporte de JMeter
+        uses: actions/upload-artifact@v3
+        with:
+          name: reporte-jmeter
+          path: resultados/reporte-html
